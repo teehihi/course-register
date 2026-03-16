@@ -1,0 +1,21 @@
+@startuml Use Case Diagram
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Sinh viên" as STU
+actor "Quản trị viên" as ADMIN
+
+rectangle "Hệ thống Đăng ký Học phần" {
+    usecase "Tìm kiếm lớp học" as UC1
+    usecase "Đăng ký học phần" as UC2
+    usecase "Hủy đăng ký (Drop)" as UC3
+    usecase "Quản lý danh mục môn học" as UC4
+    usecase "Kiểm tra điều kiện\n(Sĩ số + Tín chỉ)" as UC_Check
+}
+
+STU -- UC1
+STU -- UC2
+STU -- UC3
+UC2 ..> UC_Check : <<include>>
+ADMIN -- UC4
+@enduml

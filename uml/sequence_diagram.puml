@@ -1,0 +1,33 @@
+@startuml Sequence Diagram - Register Course
+autonumber
+actor "Sinh viên" as STU
+boundary "RegistrationPanel" as View
+control "RegistrationController" as Ctrl
+participant "RegistrationServiceImpl" as Svc
+database "SectionDAO" as SDAO
+database "RegistrationDAO" as RDAO
+
+STU -> View : Nhập Student ID, chọn lớp
+View -> Ctrl : handleRegister(studentId, sectionId)
+activate Ctrl
+
+Ctrl -> Svc : register(studentId, sectionId)
+activate Svc
+
+Svc -> SDAO : findById(sectionId)
+SDAO --> Svc : Section (capacity, currentEnrollment)
+
+alt Còn chỗ trống
+    Svc -> RDAO : isAlreadyRegistered(studentId, sectionId)
+    RDAO --> Svc : false
+    Svc -> RDAO : save(registrationData)
+    Svc -> SDAO : updateEnrollment(sectionId, +1)
+    Svc --> Ctrl : ServiceResult(success=true)
+else Hết chỗ
+    Svc --> Ctrl : ServiceResult(success=false, "Lớp đã đầy")
+end
+
+deactivate Svc
+Ctrl -> View : hiển thị kết quả (JOptionPane)
+deactivate Ctrl
+@enduml

@@ -1,0 +1,26 @@
+@startuml Activity Diagram - Register Course
+start
+:Sinh viên chọn Lớp học phần;
+:Hệ thống kiểm tra Sĩ số (Capacity);
+if (Lớp đã đầy?) then (Có)
+    :Thông báo: Lớp đã hết chỗ;
+    stop
+else (Không)
+    :Kiểm tra đã đăng ký chưa;
+    if (Đã đăng ký rồi?) then (Có)
+        :Thông báo: Đã đăng ký môn này rồi;
+        stop
+    else (Không)
+        :Kiểm tra giới hạn Tín chỉ (Max 20);
+        if (Vượt quá số tín chỉ cho phép?) then (Có)
+            :Thông báo: Vượt quá giới hạn học kỳ;
+            stop
+        else (Không)
+            :Ghi nhận đăng ký vào Database;
+            :Tăng sĩ số hiện tại (currentEnrollment + 1);
+            :Thông báo: Đăng ký thành công;
+        endif
+    endif
+endif
+stop
+@enduml

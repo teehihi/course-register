@@ -1,0 +1,70 @@
+@startuml Class Diagram
+skinparam classAttributeIconSize 0
+
+class Student {
+    - int studentId
+    - String fullName
+    - String email
+    - String major
+    - int totalCredits
+    + canRegisterMore(int credits) : boolean
+}
+
+class Course {
+    - String courseId
+    - String courseName
+    - int credits
+}
+
+class Section {
+    - int sectionId
+    - String courseId
+    - String instructor
+    - String room
+    - int capacity
+    - int currentEnrollment
+    + isFull() : boolean
+    + getSlotsLeft() : int
+}
+
+class Registration {
+    - int regId
+    - int studentId
+    - int sectionId
+    - LocalDateTime registrationDate
+    - String status
+}
+
+class ServiceResult {
+    - boolean success
+    - String message
+    + isSuccess() : boolean
+    + getMessage() : String
+}
+
+interface IRegistrationService {
+    + register(studentId, sectionId) : ServiceResult
+    + drop(studentId, sectionId) : ServiceResult
+    + getRegisteredSections(studentId) : List<Section>
+}
+
+interface ISectionDAO {
+    + findAll() : List<Section>
+    + findByKeyword(keyword) : List<Section>
+    + findById(sectionId) : Section
+    + updateEnrollment(sectionId, delta) : void
+}
+
+interface IRegistrationDAO {
+    + save(registration) : void
+    + updateStatus(studentId, sectionId, status) : void
+    + findByStudent(studentId) : List<Registration>
+    + isAlreadyRegistered(studentId, sectionId) : boolean
+}
+
+Course "1" *-- "many" Section : "có các lớp"
+Student "1" -- "many" Registration : "thực hiện"
+Section "1" -- "many" Registration : "thuộc về"
+IRegistrationService ..> IRegistrationDAO : uses
+IRegistrationService ..> ISectionDAO : uses
+@enduml
